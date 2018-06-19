@@ -25,7 +25,14 @@ func index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	connectionString := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", os.Getenv("MYSQL_USERNAME"), os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_DATABASE"))
+	connectionString := fmt.Sprintf(
+		"%s:%s@tcp(%s:3306)/%s",
+		os.Getenv("MYSQL_USERNAME"),
+		os.Getenv("MYSQL_PASSWORD"),
+		os.Getenv("MYSQL_HOST"),
+		os.Getenv("MYSQL_DATABASE"),
+	)
+
 	db, err := sql.Open("mysql", connectionString)
 
 	if err != nil {
@@ -34,43 +41,40 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 
-	var count int
-
-	if err := db.QueryRow("SELECT COUNT(name) FROM doggos").Scan(&count); err != nil {
-		panic(err)
-	}
-
-	results, err := db.Query("SELECT name FROM doggos")
-	defer results.Close()
+	rows, err := db.Query("SELECT name FROM doggos")
 
 	if err != nil {
 		panic(err)
 	}
+	
+	defer rows.Close()
 
-	doggos := make([]Doggo, count)
+	type dog struct {
+		name string
+	}
 
-	for results.Next() {
-		var doggo Doggo
+	dogs := []dog{}
 
-		if err = results.Scan(&doggo.Name); err != nil {
+	for rows.Next() {
+		var d dog
+
+		if err = rows.Scan(&d.name); err != nil {
 			panic(err)
 		}
 
-		doggos = append(doggos, doggo)
+		dogs = append(dogs, d)
 	}
 
-	var doggosList strings.Builder
+	var list strings.Builder
 
-	for _, doggo := range doggos {
-		if doggo.Name != "" {
-			fmt.Fprintf(&doggosList, "<li>%s</li>", doggo.Name)
-		}
+	for _, d := range dogs {
+		fmt.Fprintf(&list, "<li>%s</li>\n", d.name)
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Write([]byte(fmt.Sprintf(`<!DOCTYPE html>
-	<html>
+	<html lang="en-GB">
 		<head>
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -85,7 +89,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 			</ul>
 		</p>
 		</body>
-	</html>`, doggosList.String())))
+	</html>`, list.String())))
 }
 
 func main() {

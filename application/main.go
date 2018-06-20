@@ -36,10 +36,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 			<meta charset="UTF-8">
 			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 			<meta name="viewport" content="width=device-width,initial-scale=1">
-			<title>Docker 0111 – Doggos</title>
+			<title>Docker 0111 – Doggos 🐶</title>
 			</head>
 			<body>
-			<h1>Docker 0111 – Doggos</h1>
+			<h1>Docker 0111 – Doggos 🐶</h1>
 			<p>Sorry, MySQL is not ready yet!</p>
 			</body>
 		</html>`))
@@ -81,17 +81,16 @@ func index(w http.ResponseWriter, r *http.Request) {
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>Docker 0111 – Doggos</title>
+		<title>Docker 0111 – Doggos 🐶</title>
 		</head>
 		<body>
-		<h1>Docker 0111 – Doggos</h1>
-		<p>
-			<ul>
-				%s
-			</ul>
-		</p>
+		<h1>Docker 0111 – Doggos 🐶</h1>
+		<p>Here's our list of dogs, we found %d in total!</p>
+		<ul>
+			%s
+		</ul>
 		</body>
-	</html>`, list.String())))
+	</html>`, len(dogs), list.String())))
 }
 
 func main() {

@@ -1,7 +1,3 @@
-CREATE DATABASE docker_0111;
-
-USE docker_0111;
-
 CREATE TABLE doggos (
   name varchar(255)
 );

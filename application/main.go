@@ -65,7 +65,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		dogs = append(dogs, d)
 	}
 
-	log.Infof("found %d dogs in MySQL", len(dogs))
+	log.Infof("found %d dogs", len(dogs))
 
 	var list strings.Builder
 

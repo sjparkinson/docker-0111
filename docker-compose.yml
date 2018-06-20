@@ -22,5 +22,6 @@ services:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: hunter2
+      MYSQL_DATABASE: docker_0111
     volumes:
       - ./database:/docker-entrypoint-initdb.d
